@@ -4,9 +4,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Check } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
-import { Button, Card, Field, SectionTitle, StatTile } from '../../src/ui/components';
-import { colors, spacing } from '../../src/ui/theme';
-import { handPortionGuide } from '../../src/domain/handScale';
+import { Button, Card, Chip, Field, SectionTitle, StatTile } from '../../src/ui/components';
+import { colors, spacing, DOCK_CLEARANCE } from '../../src/ui/theme';
+import { handPortionGuide, REFERENCE_ADULT_HAND } from '../../src/domain/handScale';
 import { ProviderKind } from '../../src/services/ai';
 
 const PROVIDERS: ProviderKind[] = ['mock', 'claude', 'openai'];
@@ -15,9 +15,14 @@ export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
   const { hand, setHand, ai, setAiSettings, resetAll } = useAppStore();
 
-  const [handLen, setHandLen] = useState(hand ? String(hand.handLengthCm) : '');
-  const [palm, setPalm] = useState(hand ? String(hand.palmWidthCm) : '');
+  // Pre-fill with the user's value or a sensible adult default, so the Save
+  // button is never stuck disabled behind an empty-looking (placeholder) field.
+  const [handLen, setHandLen] = useState(
+    String(hand?.handLengthCm ?? REFERENCE_ADULT_HAND.handLengthCm),
+  );
+  const [palm, setPalm] = useState(String(hand?.palmWidthCm ?? REFERENCE_ADULT_HAND.palmWidthCm));
   const [apiKey, setApiKey] = useState(ai.apiKey ?? '');
+  const [savedAt, setSavedAt] = useState<number | null>(null);
 
   function saveHand() {
     const hl = Number(handLen);
@@ -28,6 +33,7 @@ export default function SettingsScreen() {
       palmWidthCm: Number.isFinite(pw) && pw > 0 ? pw : hl * 0.46,
       calibratedAt: new Date().toISOString(),
     });
+    setSavedAt(Date.now());
   }
 
   const guide = hand ? handPortionGuide(hand) : null;
@@ -35,7 +41,11 @@ export default function SettingsScreen() {
   return (
     <ScrollView
       style={{ backgroundColor: colors.bg }}
-      contentContainerStyle={{ padding: spacing.lg, paddingTop: insets.top + spacing.md }}
+      contentContainerStyle={{
+        padding: spacing.lg,
+        paddingTop: insets.top + spacing.md,
+        paddingBottom: DOCK_CLEARANCE,
+      }}
     >
       <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800', marginBottom: spacing.md }}>
         Settings
@@ -55,12 +65,16 @@ export default function SettingsScreen() {
             <Field label="Palm width (cm)" keyboardType="decimal-pad" value={palm} onChangeText={setPalm} placeholder="8.5" />
           </View>
         </View>
-        <Button title={hand ? 'Update calibration' : 'Save calibration'} onPress={saveHand} disabled={!handLen} />
-        {hand && (
+        <Button
+          title={savedAt ? 'Saved ✓' : hand ? 'Update calibration' : 'Save calibration'}
+          onPress={saveHand}
+          disabled={!Number(handLen)}
+        />
+        {(hand || savedAt) && (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing.sm }}>
             <Check color={colors.accent} size={13} strokeWidth={2.6} />
             <Text style={{ color: colors.accent, fontSize: 12 }}>
-              Calibrated {hand.calibratedAt.slice(0, 10)}
+              Calibrated{hand ? ` ${hand.calibratedAt.slice(0, 10)}` : ''} · hand {handLen}cm
             </Text>
           </View>
         )}
@@ -86,21 +100,12 @@ export default function SettingsScreen() {
       <Card>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.md }}>
           {PROVIDERS.map((p) => (
-            <Text
+            <Chip
               key={p}
+              label={p}
+              active={ai.provider === p}
               onPress={() => setAiSettings({ ...ai, provider: p })}
-              style={{
-                color: ai.provider === p ? '#06210f' : colors.text,
-                backgroundColor: ai.provider === p ? colors.accent : colors.cardAlt,
-                paddingVertical: 6,
-                paddingHorizontal: 12,
-                borderRadius: 999,
-                overflow: 'hidden',
-                fontWeight: '600',
-              }}
-            >
-              {p}
-            </Text>
+            />
           ))}
         </View>
         {ai.provider !== 'mock' && (

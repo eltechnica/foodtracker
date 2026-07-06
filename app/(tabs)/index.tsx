@@ -4,7 +4,7 @@ import { Hand } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Card, MacroBar, SectionTitle, StatTile } from '../../src/ui/components';
-import { colors, spacing } from '../../src/ui/theme';
+import { colors, spacing, DOCK_CLEARANCE } from '../../src/ui/theme';
 import { dailyTotalsFor } from '../../src/domain/nutrition';
 import { summariseSpend, summariseAlcohol, expensesInRange } from '../../src/domain/spend';
 import { latestWeight, weeklyRateKg } from '../../src/domain/weight';
@@ -29,7 +29,7 @@ export default function TodayScreen() {
   return (
     <ScrollView
       style={{ backgroundColor: colors.bg }}
-      contentContainerStyle={{ padding: spacing.lg, paddingTop: insets.top + spacing.md }}
+      contentContainerStyle={{ padding: spacing.lg, paddingTop: insets.top + spacing.md, paddingBottom: DOCK_CLEARANCE }}
     >
       <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800', marginBottom: 2 }}>
         Today

@@ -19,6 +19,19 @@ import {
   IngredientResult,
   IngredientVisionRequest,
 } from './ingredients';
+import {
+  buildNutritionUserText,
+  coerceNutrition,
+  NUTRITION_JSON_INSTRUCTIONS,
+  NutritionResult,
+  NutritionVisionRequest,
+} from './mealScreenshot';
+import {
+  coerceWeight,
+  WEIGHT_JSON_INSTRUCTIONS,
+  WeightScanResult,
+  WeightVisionRequest,
+} from './weightScan';
 import { MealVisionRequest, MealVisionResult, VisionProvider } from './types';
 
 export interface OpenAIConfig {
@@ -102,5 +115,25 @@ export class OpenAIVisionProvider implements VisionProvider {
       req.mimeType,
     );
     return coerceIngredients(parseModelJson(text), this.name);
+  }
+
+  async analyzeNutrition(req: NutritionVisionRequest): Promise<NutritionResult> {
+    const text = await this.call(
+      NUTRITION_JSON_INSTRUCTIONS,
+      buildNutritionUserText(req.hint),
+      req.imageBase64,
+      req.mimeType,
+    );
+    return coerceNutrition(parseModelJson(text), this.name);
+  }
+
+  async analyzeWeight(req: WeightVisionRequest): Promise<WeightScanResult> {
+    const text = await this.call(
+      WEIGHT_JSON_INSTRUCTIONS,
+      'Read the body weight from this image.',
+      req.imageBase64,
+      req.mimeType,
+    );
+    return coerceWeight(parseModelJson(text), this.name);
   }
 }

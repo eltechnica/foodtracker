@@ -6,7 +6,7 @@ import { Plus, Camera, Upload, ScanLine } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Button, Card, Field, SectionTitle } from '../../src/ui/components';
-import { colors, spacing } from '../../src/ui/theme';
+import { colors, spacing, DOCK_CLEARANCE } from '../../src/ui/theme';
 import { ensureCalories, ingredientsFromText, nutritionForServings } from '../../src/domain/fitmencook';
 import { Recipe } from '../../src/domain/types';
 import { createVisionProvider } from '../../src/services/ai';
@@ -106,7 +106,7 @@ export default function RecipesScreen() {
   return (
     <ScrollView
       style={{ backgroundColor: colors.bg }}
-      contentContainerStyle={{ padding: spacing.lg, paddingTop: insets.top + spacing.md }}
+      contentContainerStyle={{ padding: spacing.lg, paddingTop: insets.top + spacing.md, paddingBottom: DOCK_CLEARANCE }}
     >
       <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800', marginBottom: 2 }}>
         Recipes

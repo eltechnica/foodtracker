@@ -28,3 +28,9 @@ export const radius = {
   md: 12,
   lg: 16,
 };
+
+/**
+ * Bottom padding every scroll view adds so its last content clears the tab bar
+ * and the floating action button that sits above it.
+ */
+export const DOCK_CLEARANCE = 108;

@@ -10,6 +10,8 @@
 import { HandReference, Macros } from '../../domain/types';
 import type { ReceiptVisionRequest, ReceiptResult } from './receipt';
 import type { IngredientVisionRequest, IngredientResult } from './ingredients';
+import type { NutritionVisionRequest, NutritionResult } from './mealScreenshot';
+import type { WeightVisionRequest, WeightScanResult } from './weightScan';
 
 export interface MealVisionRequest {
   /** Base64-encoded image bytes (no data: prefix). */
@@ -54,8 +56,12 @@ export interface VisionProvider {
   analyzeMeal(req: MealVisionRequest): Promise<MealVisionResult>;
   analyzeReceipt(req: ReceiptVisionRequest): Promise<ReceiptResult>;
   analyzeIngredients(req: IngredientVisionRequest): Promise<IngredientResult>;
+  analyzeNutrition(req: NutritionVisionRequest): Promise<NutritionResult>;
+  analyzeWeight(req: WeightVisionRequest): Promise<WeightScanResult>;
 }
 
 // Re-exported here so provider implementations import from one place.
 export type { ReceiptVisionRequest, ReceiptResult } from './receipt';
 export type { IngredientVisionRequest, IngredientResult } from './ingredients';
+export type { NutritionVisionRequest, NutritionResult } from './mealScreenshot';
+export type { WeightVisionRequest, WeightScanResult } from './weightScan';

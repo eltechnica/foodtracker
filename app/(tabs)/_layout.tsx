@@ -1,3 +1,4 @@
+import { View } from 'react-native';
 import { Tabs } from 'expo-router';
 import {
   LayoutDashboard,
@@ -9,6 +10,7 @@ import {
   type LucideIcon,
 } from 'lucide-react-native';
 import { colors } from '../../src/ui/theme';
+import { Fab } from '../../src/ui/Fab';
 
 function tabIcon(Icon: LucideIcon) {
   return ({ color, focused }: { color: string; focused: boolean }) => (
@@ -18,6 +20,7 @@ function tabIcon(Icon: LucideIcon) {
 
 export default function TabsLayout() {
   return (
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
     <Tabs
       screenOptions={{
         headerStyle: { backgroundColor: colors.bg },
@@ -42,5 +45,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="recipes" options={{ title: 'Recipes', tabBarIcon: tabIcon(ChefHat) }} />
       <Tabs.Screen name="settings" options={{ title: 'Settings', tabBarIcon: tabIcon(Settings) }} />
     </Tabs>
+    <Fab />
+    </View>
   );
 }

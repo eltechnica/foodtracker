@@ -36,3 +36,5 @@ export { estimateMealFromVision } from './estimate';
 export type { MealEstimate } from './estimate';
 export type { ReceiptResult, ReceiptVisionRequest } from './receipt';
 export type { IngredientResult, IngredientVisionRequest } from './ingredients';
+export type { NutritionResult, NutritionVisionRequest } from './mealScreenshot';
+export type { WeightScanResult, WeightVisionRequest } from './weightScan';

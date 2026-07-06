@@ -69,14 +69,21 @@ export function StatTile({
     <View
       style={{
         flex: 1,
+        minWidth: 0,
         backgroundColor: colors.cardAlt,
         borderRadius: radius.md,
         padding: spacing.md,
         marginHorizontal: spacing.xs,
       }}
     >
-      <Text style={{ color: colors.subtext, fontSize: 12, marginBottom: 4 }}>{label}</Text>
-      <Text style={{ color: tint, fontSize: 22, fontWeight: '700' }}>
+      <Text numberOfLines={1} style={{ color: colors.subtext, fontSize: 12, marginBottom: 4 }}>
+        {label}
+      </Text>
+      <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        style={{ color: tint, fontSize: 20, fontWeight: '700' }}
+      >
         {value}
         {unit ? <Text style={{ fontSize: 13, color: colors.subtext }}> {unit}</Text> : null}
       </Text>
@@ -147,6 +154,33 @@ export function Field({
         ]}
       />
     </View>
+  );
+}
+
+/** A selectable pill used for categories, meal types, providers, etc. */
+export function Chip({
+  label,
+  active,
+  onPress,
+}: {
+  label: string;
+  active: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        backgroundColor: active ? colors.accent : colors.cardAlt,
+        borderRadius: 999,
+        paddingVertical: 8,
+        paddingHorizontal: 14,
+      }}
+    >
+      <Text style={{ color: active ? '#06210f' : colors.text, fontWeight: '600', fontSize: 13 }}>
+        {label}
+      </Text>
+    </TouchableOpacity>
   );
 }
 

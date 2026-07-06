@@ -5,8 +5,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { Plus, Wine, Camera, Upload, ScanLine, TriangleAlert } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
-import { Button, Card, Field, SectionTitle, StatTile } from '../../src/ui/components';
-import { colors, spacing } from '../../src/ui/theme';
+import { Button, Card, Chip, Field, SectionTitle, StatTile } from '../../src/ui/components';
+import { colors, spacing, DOCK_CLEARANCE } from '../../src/ui/theme';
 import { ReceiptLineItem, SpendCategory } from '../../src/domain/types';
 import { diningShare, estimateDrinkCalories, summariseAlcohol, summariseSpend } from '../../src/domain/spend';
 import { createVisionProvider } from '../../src/services/ai';
@@ -116,7 +116,7 @@ export default function SpendScreen() {
   return (
     <ScrollView
       style={{ backgroundColor: colors.bg }}
-      contentContainerStyle={{ padding: spacing.lg, paddingTop: insets.top + spacing.md }}
+      contentContainerStyle={{ padding: spacing.lg, paddingTop: insets.top + spacing.md, paddingBottom: DOCK_CLEARANCE }}
     >
       <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800', marginBottom: spacing.md }}>
         Spend & alcohol
@@ -198,21 +198,7 @@ export default function SpendScreen() {
         <Field label="Merchant (optional)" value={merchant} onChangeText={setMerchant} placeholder="Whole Foods" />
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.md }}>
           {CATEGORIES.map((c) => (
-            <Text
-              key={c}
-              onPress={() => setCategory(c)}
-              style={{
-                color: category === c ? '#06210f' : colors.text,
-                backgroundColor: category === c ? colors.accent : colors.cardAlt,
-                paddingVertical: 6,
-                paddingHorizontal: 12,
-                borderRadius: 999,
-                overflow: 'hidden',
-                fontWeight: '600',
-              }}
-            >
-              {c}
-            </Text>
+            <Chip key={c} label={c} active={category === c} onPress={() => setCategory(c)} />
           ))}
         </View>
         <Button title="Add expense" icon={Plus} onPress={addSpend} disabled={!amount} />

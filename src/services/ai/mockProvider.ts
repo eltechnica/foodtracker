@@ -7,9 +7,30 @@
 import { MealVisionRequest, MealVisionResult, VisionProvider } from './types';
 import { ReceiptResult, ReceiptVisionRequest } from './receipt';
 import { IngredientResult, IngredientVisionRequest } from './ingredients';
+import { NutritionResult, NutritionVisionRequest } from './mealScreenshot';
+import { WeightScanResult, WeightVisionRequest } from './weightScan';
 
 export class MockVisionProvider implements VisionProvider {
   readonly name = 'mock';
+
+  async analyzeNutrition(_req: NutritionVisionRequest): Promise<NutritionResult> {
+    return {
+      provider: this.name,
+      items: [
+        { name: 'Logged meal', grams: 0, calories: 620, macros: { protein: 42, carbs: 55, fat: 22 } },
+      ],
+      notes: 'Mock estimate — connect a real vision provider to read your screenshot.',
+    };
+  }
+
+  async analyzeWeight(_req: WeightVisionRequest): Promise<WeightScanResult> {
+    return {
+      provider: this.name,
+      kg: 83.2,
+      bodyFatPct: 18.4,
+      notes: 'Mock estimate — connect a real vision provider to read your screenshot.',
+    };
+  }
 
   async analyzeIngredients(_req: IngredientVisionRequest): Promise<IngredientResult> {
     return {
