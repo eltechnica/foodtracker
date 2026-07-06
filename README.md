@@ -69,13 +69,30 @@ npm run typecheck # tsc --noEmit
 npm start         # Expo dev server (press i / a / w)
 ```
 
-### See it on desktop (fastest)
+### Use it as an installable app (no App Store)
+
+The web build is a **PWA** deployed to GitHub Pages by the
+`.github/workflows/deploy-pages.yml` workflow. Once Pages is enabled for the
+repo (Settings → Pages → Source: **GitHub Actions**) and `main` has the code,
+the app is live at:
+
+```
+https://eltechnica.github.io/foodtracker/
+```
+
+On iPhone: open that URL in **Safari → Share → Add to Home Screen** → it gets a
+real icon and launches full-screen, no browser chrome. Works on Android/desktop
+too.
+
+### See it on desktop (fastest, local)
 
 No phone or Xcode needed — run the **web** target and it opens in your browser:
 
 ```bash
 npm install
 npm run web       # opens http://localhost:8081 in your browser
+# or build the static PWA the way CI does:
+npm run build:web # outputs ./dist (open via any static server under /foodtracker/)
 ```
 
 Everything works there except the truly native bits (live camera capture and
