@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import type { LucideIcon } from 'lucide-react-native';
 import { colors, radius, spacing } from './theme';
 
 export function Card({
@@ -88,11 +89,13 @@ export function Button({
   onPress,
   tone = 'accent',
   disabled,
+  icon: Icon,
 }: {
   title: string;
   onPress: () => void;
   tone?: 'accent' | 'neutral' | 'danger';
   disabled?: boolean;
+  icon?: LucideIcon;
 }) {
   const bg =
     tone === 'accent' ? colors.accent : tone === 'danger' ? colors.danger : colors.cardAlt;
@@ -107,9 +110,13 @@ export function Button({
         borderRadius: radius.md,
         paddingVertical: spacing.md,
         paddingHorizontal: spacing.lg,
+        flexDirection: 'row',
+        gap: spacing.sm,
         alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
+      {Icon ? <Icon color={fg} size={17} strokeWidth={2.2} /> : null}
       <Text style={{ color: fg, fontWeight: '700', fontSize: 15 }}>{title}</Text>
     </TouchableOpacity>
   );

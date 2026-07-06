@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Plus, Wine } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Button, Card, Field, SectionTitle, StatTile } from '../../src/ui/components';
@@ -102,7 +103,7 @@ export default function SpendScreen() {
             </Text>
           ))}
         </View>
-        <Button title="＋ Add expense" onPress={addSpend} disabled={!amount} />
+        <Button title="Add expense" icon={Plus} onPress={addSpend} disabled={!amount} />
       </Card>
 
       <SectionTitle>Log a drink</SectionTitle>
@@ -119,7 +120,7 @@ export default function SpendScreen() {
             <Field label="ABV %" keyboardType="decimal-pad" value={abv} onChangeText={setAbv} placeholder="6.5" />
           </View>
         </View>
-        <Button title="🍺 Log drink" onPress={logDrink} tone="neutral" disabled={!volume || !abv} />
+        <Button title="Log drink" icon={Wine} onPress={logDrink} tone="neutral" disabled={!volume || !abv} />
       </Card>
 
       <SectionTitle>Recent expenses</SectionTitle>

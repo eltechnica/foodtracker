@@ -1,5 +1,6 @@
 import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Hand } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Card, MacroBar, SectionTitle, StatTile } from '../../src/ui/components';
@@ -37,9 +38,10 @@ export default function TodayScreen() {
 
       {!hand && (
         <Card style={{ borderColor: colors.accent }}>
-          <Text style={{ color: colors.text, fontWeight: '700', marginBottom: 4 }}>
-            👋 Calibrate your hand
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: 4 }}>
+            <Hand color={colors.accent} size={18} strokeWidth={2.2} />
+            <Text style={{ color: colors.text, fontWeight: '700' }}>Calibrate your hand</Text>
+          </View>
           <Text style={{ color: colors.subtext }}>
             Set your hand size in Settings so photo-based calorie estimates use it as a stable
             scale reference.

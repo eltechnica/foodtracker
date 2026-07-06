@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Plus } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Button, Card, Field, SectionTitle } from '../../src/ui/components';
@@ -109,7 +110,7 @@ export default function RecipesScreen() {
           numberOfLines={5}
           style={{ height: 110, textAlignVertical: 'top' }}
         />
-        <Button title="＋ Save recipe" onPress={save} disabled={!title && !blob} />
+        <Button title="Save recipe" icon={Plus} onPress={save} disabled={!title && !blob} />
       </Card>
 
       <SectionTitle>Your recipes</SectionTitle>
@@ -126,7 +127,7 @@ export default function RecipesScreen() {
             ingredients
           </Text>
           <View style={{ marginTop: spacing.md }}>
-            <Button title="＋ Log 1 serving as a meal" onPress={() => logServing(r)} tone="neutral" />
+            <Button title="Log 1 serving as a meal" icon={Plus} onPress={() => logServing(r)} tone="neutral" />
           </View>
         </Card>
       ))}

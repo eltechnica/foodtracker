@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Camera, Image as ImageIcon, Sparkles, Plus, Check, TriangleAlert } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Button, Card, Field, SectionTitle } from '../../src/ui/components';
@@ -99,10 +100,10 @@ export default function MealsScreen() {
         )}
         <View style={{ flexDirection: 'row', gap: spacing.sm }}>
           <View style={{ flex: 1 }}>
-            <Button title="📷 Camera" onPress={() => pick('camera')} tone="neutral" />
+            <Button title="Camera" icon={Camera} onPress={() => pick('camera')} tone="neutral" />
           </View>
           <View style={{ flex: 1 }}>
-            <Button title="🖼️ Library" onPress={() => pick('library')} tone="neutral" />
+            <Button title="Library" icon={ImageIcon} onPress={() => pick('library')} tone="neutral" />
           </View>
         </View>
       </Card>
@@ -116,7 +117,12 @@ export default function MealsScreen() {
             value={hint}
             onChangeText={setHint}
           />
-          <Button title={busy ? 'Analyzing…' : '✨ Estimate calories'} onPress={analyze} disabled={busy} />
+          <Button
+            title={busy ? 'Analyzing…' : 'Estimate calories'}
+            icon={busy ? undefined : Sparkles}
+            onPress={analyze}
+            disabled={busy}
+          />
           {busy && <ActivityIndicator color={colors.accent} style={{ marginTop: spacing.md }} />}
           {!hand && (
             <Text style={{ color: colors.fat, fontSize: 12, marginTop: spacing.sm }}>
@@ -141,11 +147,18 @@ export default function MealsScreen() {
           <Text style={{ color: colors.text, fontSize: 22, fontWeight: '800' }}>
             {estimate.totalCalories} kcal
           </Text>
-          <Text style={{ color: colors.subtext, marginBottom: spacing.sm }}>
-            {estimate.handDetected ? '✅ Hand detected as scale' : '⚠️ No hand detected — rough estimate'}
-            {'  ·  '}P {estimate.totalMacros.protein}g · C {estimate.totalMacros.carbs}g · F{' '}
-            {estimate.totalMacros.fat}g
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: spacing.sm }}>
+            {estimate.handDetected ? (
+              <Check color={colors.accent} size={15} strokeWidth={2.4} />
+            ) : (
+              <TriangleAlert color={colors.fat} size={15} strokeWidth={2.4} />
+            )}
+            <Text style={{ color: colors.subtext, flex: 1 }}>
+              {estimate.handDetected ? 'Hand detected as scale' : 'No hand detected — rough estimate'}
+              {'  ·  '}P {estimate.totalMacros.protein}g · C {estimate.totalMacros.carbs}g · F{' '}
+              {estimate.totalMacros.fat}g
+            </Text>
+          </View>
           {estimate.items.map((it, i) => (
             <View
               key={i}
@@ -188,7 +201,7 @@ export default function MealsScreen() {
               </Text>
             ))}
           </View>
-          <Button title="＋ Save meal" onPress={save} />
+          <Button title="Save meal" icon={Plus} onPress={save} />
         </Card>
       )}
 

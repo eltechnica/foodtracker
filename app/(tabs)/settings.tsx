@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Check } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Button, Card, Field, SectionTitle, StatTile } from '../../src/ui/components';
@@ -56,9 +57,12 @@ export default function SettingsScreen() {
         </View>
         <Button title={hand ? 'Update calibration' : 'Save calibration'} onPress={saveHand} disabled={!handLen} />
         {hand && (
-          <Text style={{ color: colors.accent, fontSize: 12, marginTop: spacing.sm }}>
-            ✅ Calibrated {hand.calibratedAt.slice(0, 10)}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing.sm }}>
+            <Check color={colors.accent} size={13} strokeWidth={2.6} />
+            <Text style={{ color: colors.accent, fontSize: 12 }}>
+              Calibrated {hand.calibratedAt.slice(0, 10)}
+            </Text>
+          </View>
         )}
       </Card>
 
