@@ -69,6 +69,20 @@ npm run typecheck # tsc --noEmit
 npm start         # Expo dev server (press i / a / w)
 ```
 
+### See it on desktop (fastest)
+
+No phone or Xcode needed — run the **web** target and it opens in your browser:
+
+```bash
+npm install
+npm run web       # opens http://localhost:8081 in your browser
+```
+
+Everything works there except the truly native bits (live camera capture and
+HealthKit); use **Library** to pick a meal photo and the Mock AI provider to see
+the full flow. To run on a phone instead, install **Expo Go** and run
+`npm start`, then scan the QR code.
+
 - The app works out of the box with the **Mock** AI provider (no key needed).
 - To use real AI: Settings → pick **Claude** or **OpenAI** → paste your API key.
 - For live Apple Health sync you need a development build with the HealthKit
