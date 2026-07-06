@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Ultimate Health Tracker",
+    "slug": "ultimate-health-tracker",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "healthtracker",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.ultimatehealthtracker",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Take photos of your meals so the app can estimate calories using your hand as a scale reference.",
+        "NSPhotoLibraryUsageDescription": "Import meal photos to estimate their nutrition.",
+        "NSHealthShareUsageDescription": "Read your weight and body-fat from Apple Health (including data synced from Renpho).",
+        "NSHealthUpdateUsageDescription": "Optionally write nutrition data back to Apple Health."
+      },
+      "entitlements": {
+        "com.apple.developer.healthkit": true
+      }
+    },
+    "android": {
+      "package": "com.example.ultimatehealthtracker",
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE"]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow the app to use the camera to photograph your meals."
+        }
+      ],
+      "expo-image-picker"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
