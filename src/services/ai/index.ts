@@ -34,3 +34,5 @@ export function createVisionProvider(settings: AiSettings): VisionProvider {
 export * from './types';
 export { estimateMealFromVision } from './estimate';
 export type { MealEstimate } from './estimate';
+export type { ReceiptResult, ReceiptVisionRequest } from './receipt';
+export type { IngredientResult, IngredientVisionRequest } from './ingredients';

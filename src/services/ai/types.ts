@@ -8,6 +8,8 @@
  */
 
 import { HandReference, Macros } from '../../domain/types';
+import type { ReceiptVisionRequest, ReceiptResult } from './receipt';
+import type { IngredientVisionRequest, IngredientResult } from './ingredients';
 
 export interface MealVisionRequest {
   /** Base64-encoded image bytes (no data: prefix). */
@@ -50,4 +52,10 @@ export interface MealVisionResult {
 export interface VisionProvider {
   readonly name: string;
   analyzeMeal(req: MealVisionRequest): Promise<MealVisionResult>;
+  analyzeReceipt(req: ReceiptVisionRequest): Promise<ReceiptResult>;
+  analyzeIngredients(req: IngredientVisionRequest): Promise<IngredientResult>;
 }
+
+// Re-exported here so provider implementations import from one place.
+export type { ReceiptVisionRequest, ReceiptResult } from './receipt';
+export type { IngredientVisionRequest, IngredientResult } from './ingredients';

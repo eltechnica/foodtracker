@@ -69,6 +69,17 @@ export interface Expense {
   notes?: string;
   /** Optional link to a meal this spend paid for. */
   mealId?: string;
+  /** How this expense was captured. */
+  source?: 'manual' | 'receipt-scan';
+  /** Local URI of a scanned receipt image, if any. */
+  receiptUri?: string;
+  /** Line items read off a scanned receipt. */
+  lineItems?: ReceiptLineItem[];
+}
+
+export interface ReceiptLineItem {
+  name: string;
+  price: number;
 }
 
 /** A logged alcoholic drink. */

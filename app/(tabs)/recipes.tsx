@@ -1,17 +1,19 @@
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Plus } from 'lucide-react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { Plus, Camera, Upload, ScanLine } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Button, Card, Field, SectionTitle } from '../../src/ui/components';
 import { colors, spacing } from '../../src/ui/theme';
 import { ensureCalories, ingredientsFromText, nutritionForServings } from '../../src/domain/fitmencook';
 import { Recipe } from '../../src/domain/types';
+import { createVisionProvider } from '../../src/services/ai';
 
 export default function RecipesScreen() {
   const insets = useSafeAreaInsets();
-  const { recipes, addRecipe, addMeal } = useAppStore();
+  const { recipes, ai, addRecipe, addMeal } = useAppStore();
 
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
@@ -21,6 +23,42 @@ export default function RecipesScreen() {
   const [carbs, setCarbs] = useState('');
   const [fat, setFat] = useState('');
   const [blob, setBlob] = useState('');
+  const [scanning, setScanning] = useState(false);
+  const [scanError, setScanError] = useState<string | null>(null);
+
+  async function scanIngredients(from: 'camera' | 'library') {
+    setScanError(null);
+    const opts: ImagePicker.ImagePickerOptions = {
+      base64: true,
+      quality: 0.6,
+      mediaTypes: ['images'],
+    };
+    const res =
+      from === 'camera'
+        ? await ImagePicker.launchCameraAsync(opts)
+        : await ImagePicker.launchImageLibraryAsync(opts);
+    if (res.canceled || !res.assets?.[0]?.base64) return;
+
+    setScanning(true);
+    try {
+      const provider = createVisionProvider(ai);
+      const result = await provider.analyzeIngredients({
+        imageBase64: res.assets[0].base64!,
+        mimeType: 'image/jpeg',
+      });
+      if (result.title && !title.trim()) setTitle(result.title);
+      if (result.ingredients.length) {
+        // Append to whatever is already in the box so scans can stack.
+        setBlob((prev) => (prev.trim() ? prev + '\n' : '') + result.ingredients.join('\n'));
+      } else {
+        setScanError('No ingredients found in that image.');
+      }
+    } catch (e: any) {
+      setScanError(e?.message ?? 'Could not read the ingredients');
+    } finally {
+      setScanning(false);
+    }
+  }
 
   function save() {
     const ingredients = ingredientsFromText(blob);
@@ -101,8 +139,31 @@ export default function RecipesScreen() {
             <Field label="F (g)" keyboardType="decimal-pad" value={fat} onChangeText={setFat} />
           </View>
         </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.sm }}>
+          <ScanLine color={colors.accent} size={16} strokeWidth={2.2} />
+          <Text style={{ color: colors.subtext, fontSize: 13, flex: 1 }}>
+            Photograph or upload a screenshot of an ingredient list and AI fills it in below.
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row', gap: spacing.sm, marginBottom: spacing.md }}>
+          <View style={{ flex: 1 }}>
+            <Button title="Photograph" icon={Camera} tone="neutral" onPress={() => scanIngredients('camera')} disabled={scanning} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Button title="Upload image" icon={Upload} tone="neutral" onPress={() => scanIngredients('library')} disabled={scanning} />
+          </View>
+        </View>
+        {scanning && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.md }}>
+            <ActivityIndicator color={colors.accent} />
+            <Text style={{ color: colors.subtext }}>Reading ingredients…</Text>
+          </View>
+        )}
+        {scanError && (
+          <Text style={{ color: colors.danger, marginBottom: spacing.sm, fontSize: 13 }}>{scanError}</Text>
+        )}
         <Field
-          label="Ingredients or YouTube transcript"
+          label="Ingredients (paste, or use scan above / YouTube transcript)"
           value={blob}
           onChangeText={setBlob}
           placeholder={'2 cups cooked brown rice\n6 oz grilled chicken\n1/2 avocado'}

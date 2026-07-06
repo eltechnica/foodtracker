@@ -2,11 +2,25 @@
  * Anthropic Claude vision adapter. Uses the Messages API with an image block.
  * The API key is supplied at construction so key management stays out of the
  * domain/UI. Nothing here is Claude-specific beyond the request shape — the
- * prompt and JSON schema are shared with the OpenAI adapter.
+ * prompts and JSON schemas are shared with the OpenAI adapter.
  */
 
 import { buildUserText, MEAL_JSON_INSTRUCTIONS, parseModelJson } from './prompt';
 import { coerceVisionResult } from './coerce';
+import {
+  buildReceiptUserText,
+  coerceReceipt,
+  RECEIPT_JSON_INSTRUCTIONS,
+  ReceiptResult,
+  ReceiptVisionRequest,
+} from './receipt';
+import {
+  buildIngredientUserText,
+  coerceIngredients,
+  INGREDIENTS_JSON_INSTRUCTIONS,
+  IngredientResult,
+  IngredientVisionRequest,
+} from './ingredients';
 import { MealVisionRequest, MealVisionResult, VisionProvider } from './types';
 
 export interface ClaudeConfig {
@@ -27,7 +41,13 @@ export class ClaudeVisionProvider implements VisionProvider {
     };
   }
 
-  async analyzeMeal(req: MealVisionRequest): Promise<MealVisionResult> {
+  /** Shared image+prompt call; returns the model's raw text response. */
+  private async call(
+    system: string,
+    userText: string,
+    imageBase64: string,
+    mimeType: string,
+  ): Promise<string> {
     const res = await fetch(`${this.cfg.baseUrl}/v1/messages`, {
       method: 'POST',
       headers: {
@@ -38,31 +58,52 @@ export class ClaudeVisionProvider implements VisionProvider {
       body: JSON.stringify({
         model: this.cfg.model,
         max_tokens: 1024,
-        system: MEAL_JSON_INSTRUCTIONS,
+        system,
         messages: [
           {
             role: 'user',
             content: [
-              {
-                type: 'image',
-                source: {
-                  type: 'base64',
-                  media_type: req.mimeType,
-                  data: req.imageBase64,
-                },
-              },
-              { type: 'text', text: buildUserText(req.hand, req.hint) },
+              { type: 'image', source: { type: 'base64', media_type: mimeType, data: imageBase64 } },
+              { type: 'text', text: userText },
             ],
           },
         ],
       }),
     });
-
     if (!res.ok) {
       throw new Error(`Claude API error ${res.status}: ${await res.text()}`);
     }
     const json: any = await res.json();
-    const text: string = json?.content?.[0]?.text ?? '';
+    return json?.content?.[0]?.text ?? '';
+  }
+
+  async analyzeMeal(req: MealVisionRequest): Promise<MealVisionResult> {
+    const text = await this.call(
+      MEAL_JSON_INSTRUCTIONS,
+      buildUserText(req.hand, req.hint),
+      req.imageBase64,
+      req.mimeType,
+    );
     return coerceVisionResult(parseModelJson(text), this.name);
+  }
+
+  async analyzeReceipt(req: ReceiptVisionRequest): Promise<ReceiptResult> {
+    const text = await this.call(
+      RECEIPT_JSON_INSTRUCTIONS,
+      buildReceiptUserText(req.hint),
+      req.imageBase64,
+      req.mimeType,
+    );
+    return coerceReceipt(parseModelJson(text), this.name);
+  }
+
+  async analyzeIngredients(req: IngredientVisionRequest): Promise<IngredientResult> {
+    const text = await this.call(
+      INGREDIENTS_JSON_INSTRUCTIONS,
+      buildIngredientUserText(req.hint),
+      req.imageBase64,
+      req.mimeType,
+    );
+    return coerceIngredients(parseModelJson(text), this.name);
   }
 }

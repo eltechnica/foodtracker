@@ -5,9 +5,61 @@
  */
 
 import { MealVisionRequest, MealVisionResult, VisionProvider } from './types';
+import { ReceiptResult, ReceiptVisionRequest } from './receipt';
+import { IngredientResult, IngredientVisionRequest } from './ingredients';
 
 export class MockVisionProvider implements VisionProvider {
   readonly name = 'mock';
+
+  async analyzeIngredients(_req: IngredientVisionRequest): Promise<IngredientResult> {
+    return {
+      provider: this.name,
+      title: 'High-protein burrito bowl',
+      ingredients: [
+        '2 cups cooked brown rice',
+        '6 oz grilled chicken',
+        '1/2 avocado',
+        '1 cup black beans',
+        '1/4 cup salsa',
+      ],
+      notes: 'Mock estimate — connect a real vision provider to read your photo.',
+    };
+  }
+
+  async analyzeReceipt(req: ReceiptVisionRequest): Promise<ReceiptResult> {
+    const dining = req.hint?.toLowerCase().includes('dinner');
+    return dining
+      ? {
+          provider: this.name,
+          merchant: 'The Corner Bistro',
+          total: 58.4,
+          currency: 'USD',
+          category: 'dining',
+          containsAlcohol: true,
+          lineItems: [
+            { name: 'Burger', price: 16 },
+            { name: 'Caesar salad', price: 12 },
+            { name: 'IPA draft', price: 8 },
+            { name: 'Tip', price: 10.4 },
+          ],
+          notes: 'Mock estimate — connect a real vision provider to read your receipt.',
+        }
+      : {
+          provider: this.name,
+          merchant: 'Whole Foods Market',
+          total: 42.5,
+          currency: 'USD',
+          category: 'grocery',
+          containsAlcohol: false,
+          lineItems: [
+            { name: 'Bananas', price: 2.1 },
+            { name: 'Chicken breast', price: 11.4 },
+            { name: 'Brown rice', price: 4.5 },
+            { name: 'Spinach', price: 3.5 },
+          ],
+          notes: 'Mock estimate — connect a real vision provider to read your receipt.',
+        };
+  }
 
   async analyzeMeal(req: MealVisionRequest): Promise<MealVisionResult> {
     // Pretend the hand occupies ~30% of a 1080px-wide frame.
