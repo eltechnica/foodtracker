@@ -5,7 +5,10 @@ name: Deploy web app to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    # GitHub Pages only allows deployments from the repo's default branch. This
+    # repo's default branch is the development branch below, so we watch both:
+    # whichever is currently default is the one that will actually deploy.
+    branches: [main, claude/health-nutrition-tracker-app-90d57o]
   workflow_dispatch:
 
 permissions:
