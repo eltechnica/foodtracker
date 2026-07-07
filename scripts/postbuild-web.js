@@ -24,6 +24,11 @@ if (!fs.existsSync(indexPath)) {
 const base = '/foodtracker/';
 
 const head = `
+    <style>
+      /* Paint the whole page (incl. the safe-area / home-indicator region) in the
+         app's dark background so no white shows through under a standalone PWA. */
+      html, body, #root { background-color: #0e1116; }
+    </style>
     <link rel="manifest" href="${base}manifest.json" />
     <meta name="theme-color" content="#0e1116" />
     <meta name="mobile-web-app-capable" content="yes" />
