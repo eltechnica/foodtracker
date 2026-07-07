@@ -178,6 +178,19 @@ export default function MealsScreen() {
         ))}
       </View>
 
+      {ai.provider === 'mock' && (mode === 'camera' || mode === 'screenshot') && (
+        <Card style={{ borderColor: colors.fat }}>
+          <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+            <TriangleAlert color={colors.fat} size={18} strokeWidth={2.2} />
+            <Text style={{ color: colors.text, flex: 1, fontSize: 13 }}>
+              <Text style={{ fontWeight: '700' }}>Demo analyzer.</Text> Photo/screenshot results are
+              sample data — they don't reflect your actual image. Add a Claude or OpenAI API key in
+              Settings for real AI analysis.
+            </Text>
+          </View>
+        </Card>
+      )}
+
       {error && (
         <Card style={{ borderColor: colors.danger }}>
           <Text style={{ color: colors.danger }}>{error}</Text>
