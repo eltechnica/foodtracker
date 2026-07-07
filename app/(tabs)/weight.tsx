@@ -1,19 +1,18 @@
 import { useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ActivityIndicator, Text, View } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Plus, Upload, Camera, ScanLine } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Button, Card, Field, SectionTitle, StatTile } from '../../src/ui/components';
-import { colors, spacing, DOCK_CLEARANCE } from '../../src/ui/theme';
+import { Screen } from '../../src/ui/Screen';
+import { colors, spacing } from '../../src/ui/theme';
 import { latestWeight, netChangeKg, trendWeight, weeklyRateKg } from '../../src/domain/weight';
 import { parseHealthExport } from '../../src/services/health/exportParser';
 import { createVisionProvider } from '../../src/services/ai';
 
 export default function WeightScreen() {
-  const insets = useSafeAreaInsets();
   const { weights, ai, addWeight, addWeightBatch } = useAppStore();
   const [kg, setKg] = useState('');
   const [importMsg, setImportMsg] = useState<string | null>(null);
@@ -85,18 +84,7 @@ export default function WeightScreen() {
   }
 
   return (
-    <ScrollView
-      style={{ backgroundColor: colors.bg }}
-      contentContainerStyle={{
-        padding: spacing.lg,
-        paddingTop: insets.top + spacing.md,
-        paddingBottom: DOCK_CLEARANCE,
-      }}
-    >
-      <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800', marginBottom: spacing.md }}>
-        Weight
-      </Text>
-
+    <Screen>
       <Card>
         <View style={{ flexDirection: 'row', marginHorizontal: -spacing.xs, marginBottom: spacing.sm }}>
           <StatTile label="Latest" value={last ? last.kg : '—'} unit={last ? 'kg' : ''} />
@@ -176,6 +164,6 @@ export default function WeightScreen() {
             </Text>
           </Card>
         ))}
-    </ScrollView>
+    </Screen>
   );
 }

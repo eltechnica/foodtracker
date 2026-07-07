@@ -1,18 +1,17 @@
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Text, View } from 'react-native';
 import { Check } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Button, Card, Chip, Field, SectionTitle, StatTile } from '../../src/ui/components';
-import { colors, spacing, DOCK_CLEARANCE } from '../../src/ui/theme';
+import { Screen } from '../../src/ui/Screen';
+import { colors, spacing } from '../../src/ui/theme';
 import { handPortionGuide, REFERENCE_ADULT_HAND } from '../../src/domain/handScale';
 import { ProviderKind } from '../../src/services/ai';
 
 const PROVIDERS: ProviderKind[] = ['mock', 'claude', 'openai'];
 
 export default function SettingsScreen() {
-  const insets = useSafeAreaInsets();
   const { hand, setHand, ai, setAiSettings, resetAll } = useAppStore();
 
   // Pre-fill with the user's value or a sensible adult default, so the Save
@@ -39,18 +38,7 @@ export default function SettingsScreen() {
   const guide = hand ? handPortionGuide(hand) : null;
 
   return (
-    <ScrollView
-      style={{ backgroundColor: colors.bg }}
-      contentContainerStyle={{
-        padding: spacing.lg,
-        paddingTop: insets.top + spacing.md,
-        paddingBottom: DOCK_CLEARANCE,
-      }}
-    >
-      <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800', marginBottom: spacing.md }}>
-        Settings
-      </Text>
-
+    <Screen>
       <SectionTitle>Hand calibration (scale reference)</SectionTitle>
       <Card>
         <Text style={{ color: colors.subtext, fontSize: 13, marginBottom: spacing.md }}>
@@ -140,6 +128,6 @@ export default function SettingsScreen() {
       <Text style={{ color: colors.subtext, fontSize: 12, textAlign: 'center', marginTop: spacing.md }}>
         Ultimate Health Tracker · MVP
       </Text>
-    </ScrollView>
+    </Screen>
   );
 }

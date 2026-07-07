@@ -1,10 +1,10 @@
-import { ScrollView, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Text, View } from 'react-native';
 import { Hand } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Card, MacroBar, SectionTitle, StatTile } from '../../src/ui/components';
-import { colors, spacing, DOCK_CLEARANCE } from '../../src/ui/theme';
+import { Screen } from '../../src/ui/Screen';
+import { colors, spacing } from '../../src/ui/theme';
 import { dailyTotalsFor } from '../../src/domain/nutrition';
 import { summariseSpend, summariseAlcohol, expensesInRange } from '../../src/domain/spend';
 import { latestWeight, weeklyRateKg } from '../../src/domain/weight';
@@ -14,7 +14,6 @@ function todayISO(): string {
 }
 
 export default function TodayScreen() {
-  const insets = useSafeAreaInsets();
   const { meals, weights, expenses, drinks, hand } = useAppStore();
   const today = todayISO();
 
@@ -27,14 +26,8 @@ export default function TodayScreen() {
   const rate = weeklyRateKg(weights);
 
   return (
-    <ScrollView
-      style={{ backgroundColor: colors.bg }}
-      contentContainerStyle={{ padding: spacing.lg, paddingTop: insets.top + spacing.md, paddingBottom: DOCK_CLEARANCE }}
-    >
-      <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800', marginBottom: 2 }}>
-        Today
-      </Text>
-      <Text style={{ color: colors.subtext, marginBottom: spacing.lg }}>{today}</Text>
+    <Screen>
+      <Text style={{ color: colors.subtext, marginBottom: spacing.lg, marginTop: spacing.xs }}>{today}</Text>
 
       {!hand && (
         <Card style={{ borderColor: colors.accent }}>
@@ -101,6 +94,6 @@ export default function TodayScreen() {
           </Text>
         )}
       </Card>
-    </ScrollView>
+    </Screen>
   );
 }

@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Plus, Wine, Camera, Upload, ScanLine, TriangleAlert } from 'lucide-react-native';
 
 import { useAppStore } from '../../src/store/useAppStore';
 import { Button, Card, Chip, Field, SectionTitle, StatTile } from '../../src/ui/components';
-import { colors, spacing, DOCK_CLEARANCE } from '../../src/ui/theme';
+import { Screen } from '../../src/ui/Screen';
+import { colors, spacing } from '../../src/ui/theme';
 import { ReceiptLineItem, SpendCategory } from '../../src/domain/types';
 import { diningShare, estimateDrinkCalories, summariseAlcohol, summariseSpend } from '../../src/domain/spend';
 import { createVisionProvider } from '../../src/services/ai';
@@ -21,7 +21,6 @@ interface ScannedReceipt {
 }
 
 export default function SpendScreen() {
-  const insets = useSafeAreaInsets();
   const { expenses, drinks, ai, addExpense, removeExpense, addDrink } = useAppStore();
 
   const [amount, setAmount] = useState('');
@@ -114,14 +113,7 @@ export default function SpendScreen() {
   }
 
   return (
-    <ScrollView
-      style={{ backgroundColor: colors.bg }}
-      contentContainerStyle={{ padding: spacing.lg, paddingTop: insets.top + spacing.md, paddingBottom: DOCK_CLEARANCE }}
-    >
-      <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800', marginBottom: spacing.md }}>
-        Spend & alcohol
-      </Text>
-
+    <Screen>
       <Card>
         <View style={{ flexDirection: 'row', marginHorizontal: -spacing.xs, marginBottom: spacing.sm }}>
           <StatTile label="Total" value={`$${spend.total}`} tint={colors.text} />
@@ -240,6 +232,6 @@ export default function SpendScreen() {
           </Text>
         </Card>
       ))}
-    </ScrollView>
+    </Screen>
   );
 }

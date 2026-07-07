@@ -24,6 +24,9 @@ if (!fs.existsSync(indexPath)) {
 const base = '/foodtracker/';
 
 const head = `
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <style>
       /* Paint the whole page (incl. the safe-area / home-indicator region) in the
          app's dark background so no white shows through under a standalone PWA. */
