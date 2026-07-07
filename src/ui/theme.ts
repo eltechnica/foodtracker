@@ -29,8 +29,12 @@ export const radius = {
   lg: 16,
 };
 
+/** Height of the tab bar's content area, before adding the safe-area inset. */
+export const TAB_BAR_BASE_HEIGHT = 64;
+
 /**
  * Bottom padding every scroll view adds so its last content clears the tab bar
- * and the floating action button that sits above it.
+ * and the floating action button that floats above it. Generous enough to cover
+ * the tab bar + home-indicator safe area + the FAB on any device.
  */
-export const DOCK_CLEARANCE = 108;
+export const DOCK_CLEARANCE = 150;

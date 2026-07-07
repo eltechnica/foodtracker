@@ -54,6 +54,19 @@ const head = `
 
 let html = fs.readFileSync(indexPath, 'utf8');
 
+// Ensure the viewport opts into the safe-area insets (viewport-fit=cover), so
+// react-native-safe-area-context reports a non-zero bottom inset in a
+// standalone iPhone PWA and the tab bar can pad above the home indicator.
+html = html.replace(/<meta name="viewport"[^>]*>/i, (m) =>
+  /viewport-fit=cover/i.test(m) ? m : m.replace(/"\s*\/?>$/, ', viewport-fit=cover" />'),
+);
+if (!/viewport-fit=cover/i.test(html)) {
+  html = html.replace(
+    '</head>',
+    '  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />\n  </head>',
+  );
+}
+
 if (!html.includes('rel="manifest"')) {
   html = html.replace('</head>', `${head}  </head>`);
   fs.writeFileSync(indexPath, html);

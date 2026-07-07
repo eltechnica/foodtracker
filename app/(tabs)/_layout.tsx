@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import { Tabs } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   LayoutDashboard,
   UtensilsCrossed,
@@ -9,7 +10,7 @@ import {
   Settings,
   type LucideIcon,
 } from 'lucide-react-native';
-import { colors } from '../../src/ui/theme';
+import { colors, TAB_BAR_BASE_HEIGHT } from '../../src/ui/theme';
 import { Fab } from '../../src/ui/Fab';
 
 function tabIcon(Icon: LucideIcon) {
@@ -19,18 +20,19 @@ function tabIcon(Icon: LucideIcon) {
 }
 
 export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: colors.bg },
-        headerTintColor: colors.text,
+        headerShown: false,
         tabBarStyle: {
           backgroundColor: colors.card,
           borderTopColor: colors.border,
-          height: 64,
-          paddingBottom: 8,
-          paddingTop: 6,
+          // Grow the bar by the home-indicator inset so labels are never clipped.
+          height: TAB_BAR_BASE_HEIGHT + insets.bottom,
+          paddingBottom: insets.bottom + 8,
+          paddingTop: 8,
         },
         tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
         tabBarActiveTintColor: colors.accent,

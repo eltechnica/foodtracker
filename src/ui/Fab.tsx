@@ -9,7 +9,7 @@ import { Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Plus, X, Camera, PencilLine, ScanLine, type LucideIcon } from 'lucide-react-native';
-import { colors, radius, spacing } from './theme';
+import { colors, radius, spacing, TAB_BAR_BASE_HEIGHT } from './theme';
 
 const OPTIONS: { mode: string; label: string; hint: string; icon: LucideIcon }[] = [
   { mode: 'manual', label: 'Enter manually', hint: 'Type the name and macros', icon: PencilLine },
@@ -30,7 +30,14 @@ export function Fab() {
     <>
       <View
         pointerEvents="box-none"
-        style={{ position: 'absolute', left: 0, right: 0, bottom: insets.bottom + 40, alignItems: 'center' }}
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          // Float clearly above the dock (tab bar height + safe area + a gap).
+          bottom: TAB_BAR_BASE_HEIGHT + insets.bottom + 14,
+          alignItems: 'center',
+        }}
       >
         <TouchableOpacity
           accessibilityLabel="Log a meal"
